@@ -17,24 +17,19 @@ jobs:
       # 1. <Windows, Release, latest MSVC compiler toolchain on the default runner image, default generator>
       # 2. <Linux, Release, latest GCC compiler toolchain on the default runner image, default generator>
       # 3. <Linux, Release, latest Clang compiler toolchain on the default runner image, default generator>
-      #
+      #          - os: windows-latest          - os: windows-latest
+           #\3 c_compiler: gcc
+      #   \3   c_compiler: cl
+      #  \3    cpp_compiler: cl
       # To add more build types (Release, Debug, RelWithDebInfo, etc.) customize the build_type list.
       matrix:
         os: [ubuntu-latest]
         build_type: [Release]
-        c_compiler: [gcc, cl]
+        c_compiler: [gcc]
         include:
-          - os: windows-latest
-            c_compiler: cl
-            cpp_compiler: cl
           - os: ubuntu-latest
             c_compiler: gcc
             cpp_compiler: g++
-        exclude:
-          - os: windows-latest
-            c_compiler: gcc
-          - os: ubuntu-latest
-            c_compiler: cl
 
     steps:
     - uses: actions/checkout@v4
@@ -42,6 +37,8 @@ jobs:
     - name: Install packages
       run: |
         sudo apt update
+        sudo apt full-upgrade
+        sudo apt install libnova-dev libpng-dev libopenjp2-7-dev libproj-dev-zliblg-dev libbz2-dev
         sudo apt install qt6-base-dev qt6-tools-dev linguist-qt6 qt6-tools-dev-tools
 
     - name: Set reusable strings
