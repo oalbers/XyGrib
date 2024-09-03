@@ -30,7 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QTreeWidget>
 #include <QTreeWidgetItem>
 #include <QHeaderView>
-#include <QDesktopWidget>
+//#include <QDesktopWidget> qt5
 
 #include "DialogBoxBase.h"
 #include "Metar.h"

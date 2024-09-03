@@ -209,13 +209,25 @@ void SkewTWindow::actionsCommonSlot ()
 		{
 			QPainter painter;
 			painter.begin(&printer);
-			double xscale = printer.pageRect().width()/double(skewt->width());
-			double yscale = printer.pageRect().height()/double(skewt->height());
+
+			const auto pageLayout = printer.pageLayout();
+			const auto pageRect = pageLayout.paintRectPixels(printer.resolution());
+			const auto paperRect = pageLayout.fullRectPixels(printer.resolution());
+			double xscale = pageRect.width() / double(skewt->width());
+			double yscale = pageRect.height() / double(skewt->height());
 			double scale = qMin(xscale, yscale);
-			painter.translate(printer.paperRect().x() + printer.pageRect().width()/2,
-								printer.paperRect().y() + printer.pageRect().height()/2);
+			painter.translate(pageRect.x() + paperRect.width() / 2.,
+							pageRect.y() + paperRect.height() / 2.);
 			painter.scale(scale, scale);
-			painter.translate(-skewt->width()/2, -skewt->height()/2);
+			painter.translate(-skewt->width() / 2., -skewt->height() / 2.);
+
+			// double xscale = printer.pageRect().width()/double(skewt->width());
+			// double yscale = printer.pageRect().height()/double(skewt->height());
+			// double scale = qMin(xscale, yscale);
+			// painter.translate(printer.paperRect().x() + printer.pageRect().width()/2,
+			// 					printer.paperRect().y() + printer.pageRect().height()/2);
+			// painter.scale(scale, scale);
+			// painter.translate(-skewt->width()/2, -skewt->height()/2);
 			skewt->setPrinterRendering (true);
 			skewt->render (&painter);
 			skewt->setPrinterRendering (false);
@@ -340,7 +352,7 @@ void SkewTWindow::saveFileSYLK (SylkFile &slk)
 		if (allwind.ok() && !allAlts.contains(allwind.hpa))
 			allAlts << allwind.hpa;
 	}
-	qSort (allAlts);
+	std::sort (allAlts.begin(), allAlts.end()); //qt6 is this correcT?
 	
 	col = 1;
 	slk.addCell (lig, col++, "Altitude (hPa)");

@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ***********************************************************************/
 
 #include <QTimer>
-
+#include <algorithm>
 #include "Astro.h"
 #include "Settings.h"
 #include "DataQString.h"
@@ -464,7 +464,8 @@ void MeteoTableWidget::createListVisibleGribData ()
 					DataCode(GRB_PRESSURE_MSL,LV_MSL,0).toInt32(), pos++) );
 	}
 	// Sort visible data by position
-	qSort (listVisibleData.begin(), listVisibleData.end(), lessThanMTGribData);
+	std::sort (listVisibleData.begin(), listVisibleData.end(),lessThanMTGribData);
+	//qSort (listVisibleData.begin(), listVisibleData.end(), lessThanMTGribData);
 }
 //-----------------------------------------------------------------
 void MeteoTableWidget::addLine_Isotherm0Height(int lig)
@@ -551,11 +552,13 @@ void MeteoTableWidget::addLine_Wind (const Altitude &alt, int lig)
 		if (pf->getWindValues (alt, &v, &dir)) {
 			if (GribDataIsDef(dir)) {
 				QString tmp;
-				tmp.sprintf("%.0f", dir);
+				//tmp.asprintf("%.0f", dir);
+				tmp = QString("%1").arg(dir,0,'f',0);
 				txt += tmp + tr(" °") + "\n";
 				txt += Util::formatSpeed_Wind(v);
 				if ( Util::getSetting("MTABLE_showWindBeauforts", true).toBool() ) {
-					tmp.sprintf("%2d", Util::msToBeaufort(v));
+					//tmp.asprintf("%2d", Util::msToBeaufort(v));
+				tmp = QString("%1").arg(Util::msToBeaufort(v),0,10,QChar('0'));
 					txt += "\n";
 					txt += tmp + tr(" Bf");
 				}
@@ -585,7 +588,8 @@ void MeteoTableWidget::addLine_Current (const Altitude &alt, int lig)
 		if (pf->getCurrentValues (&v, &dir)) {
 			if (GribDataIsDef(dir)) {
 				QString tmp;
-				tmp.sprintf("%.0f", dir);
+				//tmp.asprintf("%.0f", dir);
+				tmp = QString("%1").arg(dir,0,'f',0);
 				txt += tmp + tr(" °") + "\n";
 				txt += Util::formatSpeed_Current(v);
 				bgColor = QColor(plotter->getCurrentColor(v, true));
@@ -836,7 +840,8 @@ void MeteoTableWidget::addLine_Rain(int lig)
 		txt = "";
 		if (pinfo->hasRain()) {
 			double v = pinfo->rain;
-			txt.sprintf("%.2f ", v);
+			//txt.asprintf("%.2f ", v);
+			txt = QString::number(v, 'f', 2);
 			txt += tr("mm/h");
 			bgColor = QColor(plotter->getRainColor(v, true));
 		}

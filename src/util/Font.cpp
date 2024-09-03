@@ -27,6 +27,7 @@ QFont GLOB_Font [FONT_MaxValue];
 	
 //-------------------------------------------------------------------
 QString Font::getFontCodeString (FontCode code) {
+	QString res = "test";
 	switch (code) {
 		case FONT_Default :   return "FONT_Default";
 		case FONT_ComboBox :  return "FONT_ComboBox";

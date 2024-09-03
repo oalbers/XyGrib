@@ -1,6 +1,6 @@
 
 #include "SkewT.h"
-
+#include <QRegularExpression>
 //------------------------------------------------------
 SkewT::SkewT (int W, int H, QWidget *parent) : QWidget (parent)
 {
@@ -115,9 +115,9 @@ void SkewT::setConvectiveBase (const QString& cbase)
 	}
 	else if (cbase.startsWith ("surface-")) 
 	{ // format "surface-50"
-		QRegExp reg ("surface-(\\d+)");
-		if (reg.indexIn (cbase) != -1) {
-			p2 = reg.cap(1);
+		QRegularExpression reg ("surface-(\\d+)");
+		if (reg.match(cbase).hasMatch()) {
+			p2 = reg.match(cbase).captured(1);
 			hmax = surfaceHpa;
 			hmin = surfaceHpa - p2.toDouble (&ok);
 			if (ok) {
@@ -128,10 +128,10 @@ void SkewT::setConvectiveBase (const QString& cbase)
 		}
 	}
 	else { // format "1000-950"
-		QRegExp reg ("(\\d+)-(\\d+)");
-		if (reg.indexIn (cbase) != -1) {
-			p1 = reg.cap(1);
-			p2 = reg.cap(2);
+		QRegularExpression reg ("(\\d+)-(\\d+)");
+		if (reg.match (cbase).hasMatch()) {
+			p1 = reg.match(cbase).captured(1);
+			p2 = reg.match(cbase).captured(2);
 			hmax = p1.toDouble (&ok);
 			if (ok) {
 				hmin = p2.toDouble (&ok);
@@ -442,28 +442,27 @@ void  SkewT::draw_temperatureScale (QPainter &pnt, bool withLabels)
 			pnt.drawLine (i0, j0, i0, j0+4);
 			if (withLabels) {
 				QString txt = QString("%1").arg(temp);
-				pnt.drawText (i0-fmet.width(txt)/2, j0+fh, txt);
+				pnt.drawText (i0-fmet.horizontalAdvance(txt)/2, j0+fh, txt);
 			}
 		}
 		else {  // line starts outside of X axis
 			QLineF lineTemp (i0, j0, i1, j1);
 			QPointF interleft;
-			if (lineTemp.intersect (lineLeft, &interleft) == QLineF::BoundedIntersection
-			) {
+			if (lineTemp.intersects (lineLeft, &interleft)) {
 				QPoint pl = interleft.toPoint ();
 				int i = pl.x();
 				int j = pl.y();
 				pnt.drawLine (i, j, i-4, j);
 				if (withLabels) {
 					QString txt = QString("%1").arg(temp);
-					pnt.drawText (DX1-fmet.width(txt)-5, j+fh/3, txt);
+					pnt.drawText (DX1-fmet.horizontalAdvance(txt)-5, j+fh/3, txt);
 				}
 			}
 		}
 	}
 	if (withLabels) {
 		QString txt = "°C";
-		pnt.drawText (DX1-fmet.width(txt)-5, H-DY2+fh, txt);
+		pnt.drawText (DX1-fmet.horizontalAdvance(txt)-5, H-DY2+fh, txt);
 	}
 }
 //------------------------------------------------------
@@ -499,7 +498,7 @@ void  SkewT::draw_pressureScale (QPainter &pnt, bool withLabels)
 		}
 	}
 	if (withLabels)
-		pnt.drawText (i1-fmet.width("hPa")-6, DY1-6, "hPa");
+		pnt.drawText (i1-fmet.horizontalAdvance("hPa")-6, DY1-6, "hPa");
 	// intermediate lines
 	pen.setWidthF (0.4);
 	pnt.setPen (pen);
@@ -851,7 +850,7 @@ void  SkewT::draw_linesCAPE (QPainter &pnt)
 void  SkewT::draw_comments (QPainter &pnt)
 {
 	QFontMetrics fmet (pnt.font());
-	double fw = fmet.width ("W");
+	double fw = fmet.horizontalAdvance ("W");
 	double fh = fmet.lineSpacing ();
 	pnt.save ();
 	QColor commentsColor = QColor (70,70,70);
@@ -960,7 +959,7 @@ void  SkewT::draw_comments (QPainter &pnt)
 	QString dat = tr("Date: ")+curdate;
 	pnt.drawText (W/2, 2*fh, dat);
 	//-------------------------------------------------------
-    pnt.drawText (W-fmet.width("XyGrib")-5, H-5, "XyGrib");
+    pnt.drawText (W-fmet.horizontalAdvance("XyGrib")-5, H-5, "XyGrib");
 	//-------------------------------------------------------
 	QFont font = pnt.font();
 	font.setFamily ("times");

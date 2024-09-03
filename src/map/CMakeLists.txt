@@ -19,7 +19,7 @@ Projection.cpp
 Projection_libproj.cpp
 )
 
-qt5_wrap_cpp(map_mocs ${MAP_SRCS} ${MAP_HDRS})
+qt6_wrap_cpp(map_mocs ${MAP_SRCS} ${MAP_HDRS})
 
 add_library(map STATIC ${MAP_SRCS} ${map_mocs})
 

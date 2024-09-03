@@ -271,7 +271,7 @@ void FileLoaderGRIB::getGribFile(
 		reply_step1 = networkManager->get (request);
 		connect (reply_step1, SIGNAL(downloadProgress (qint64,qint64)), 
 				 this, SLOT(downloadProgress (qint64,qint64)));
-		connect (reply_step1, SIGNAL(error(QNetworkReply::NetworkError)),
+		connect (reply_step1, SIGNAL(errorOccurred(QNetworkReply::NetworkError)),
 				 this, SLOT(slotNetworkError (QNetworkReply::NetworkError)));
 		connect (reply_step1, SIGNAL(finished()),
 				 this, SLOT(slotFinished_step1 ()));

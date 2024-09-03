@@ -243,7 +243,7 @@ QFrame *DialogUnits::createFrameGui(QWidget *parent)
 	{	// UTC-12 UTC-11 ... UTC+1 UTC+2 UTC+3 ... UTC+14
 		QString stz;
 		if (i != 0)
-			stz.sprintf("UTC%+d", i);
+			stz.asprintf("UTC%+d", i);
 		else
 			stz = "UTC";
     	cbTimeZone->addItem( tr("Fixed time ")+stz, stz);
@@ -282,7 +282,7 @@ void DialogUnits::slotTimeZoneChanged(int index)
 	QString val = cbTimeZone->itemData(index).toString();
 	if (val == "LOC")
 	{
-		time_t locnow = QDateTime::currentDateTime().toTime_t();
+        time_t locnow = QDateTime::currentDateTime().toSecsSinceEpoch();
     	
     	QString saveTimeZone = Util::getSetting("timeZone", "UTC").toString();
 		Util::setSetting("timeZone",  "UTC", false);
