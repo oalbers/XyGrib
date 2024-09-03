@@ -39,7 +39,7 @@ jobs:
         sudo apt update
         #sudo apt full-upgrade        
         sudo apt install libnova-dev libpng-dev libopenjp2-7-dev libproj-dev zlib1g-dev libbz2-dev libopengl-dev libgl1-mesa-dev
-        sudo apt install qt6-base-dev qt6-tools-dev linguist-qt6 qt6-tools-dev-tools
+        sudo apt install qt6-base-dev qt6-tools-dev linguist-qt6 qt6-tools-dev-tools qt6-l10n-tools
 
     - name: Set reusable strings
       # Turn repeated input strings (such as the build output directory) into step outputs. These step outputs can be used throughout the workflow file.
