@@ -29,8 +29,8 @@ PositionEditorWidget.cpp
 TextStyleEditorWidget.cpp
 )
 
-qt5_wrap_ui(gui_gen_srcs ${GUI_UI})
-qt5_wrap_cpp(gui_mocs ${GUI_SRCS} ${GUI_HDRS} ${gui_gen_srcs})
+qt6_wrap_ui(gui_gen_srcs ${GUI_UI})
+qt6_wrap_cpp(gui_mocs ${GUI_SRCS} ${GUI_HDRS} ${gui_gen_srcs})
 
 add_library(gui STATIC ${GUI_SRCS} ${gui_gen_srcs} ${gui_mocs})
 

@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDesktopServices>
 #include <QUrl>
 #include <QProcess>
+#include <QActionGroup>
 
 #include "MainWindow.h"
 #include "MeteoTable.h"
@@ -260,8 +261,12 @@ void MainWindow::connectSignals()
 	connect(qApp, SIGNAL(aboutToQuit()), this, SLOT(slotFile_Quit()));
 
     //-------------------------------------------------------
+	// old way from qt5 still working..only needed to add header
     connect(mb->acMap_GroupQuality, SIGNAL(triggered(QAction *)),
             this, SLOT(slotMap_Quality()));
+	//connect(mb->acMap_GroupQuality, &QActionGroup::triggered, this, &MainWindow::slotMap_Quality);
+	
+
 
     connect(mb->acMap_GroupProjection, SIGNAL(triggered(QAction *)),
             this, SLOT(slotMap_Projection(QAction *)));
@@ -1938,9 +1943,9 @@ void MainWindow::statusBar_showSelectedZone()
 void MainWindow::slotMouseClicked(QMouseEvent * e)
 {
     statusBar_showSelectedZone();
-
-	mouseClicX = e->x();
- 	mouseClicY = e->y();
+	
+	mouseClicX = e->position().x();
+ 	mouseClicY = e->position().y();
     switch (e->button()) {
         case Qt::LeftButton : {
 			// added by Tim Holtschneider, 05.2010
@@ -1951,8 +1956,8 @@ void MainWindow::slotMouseClicked(QMouseEvent * e)
 			}
             break;
         }
-        case Qt::MidButton :   // Centre la carte sur le point
-            proj->setCentralPixel(e->x(), e->y());
+        case Qt::MiddleButton :   // Centre la carte sur le point
+            proj->setCentralPixel(e->position().x(), e->position().y());
             terre->setProjection(proj);
             break;
 
@@ -2569,7 +2574,7 @@ void MainWindow::slotCheckForUpdates()
     QString page = "/getversion.php";
     QNetworkRequest request = Util::makeNetworkRequest("http://"+Util::getServerName()+page);
     reply = networkManager->get(request);
-    connect (reply, SIGNAL(error(QNetworkReply::NetworkError)),
+    connect (reply, SIGNAL(errorOccurred(QNetworkReply::NetworkError)),
                     this, SLOT(slotNetworkError (QNetworkReply::NetworkError)));
     connect (reply, SIGNAL(finished()),
              this, SLOT(slotFinished ()));

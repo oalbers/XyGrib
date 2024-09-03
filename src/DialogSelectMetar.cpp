@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <cmath>
 #include <cassert>
 #include <ctime>
+#include <algorithm> 
 
 #include "DialogSelectMetar.h"
 #include "Util.h"
@@ -62,7 +63,7 @@ DialogSelectMetar::DialogSelectMetar (QWidget *parent) : DialogBoxBase (parent)
     //----------------------------------------------------------
 	int treeoffset = Util::getSetting ("metar_tree_offset", 0).toInt();
 	treeWidget->verticalScrollBar()->setSliderPosition (treeoffset);
-	QDesktopWidget *wscr = QApplication::desktop ();
+	QScreen *wscr = QGuiApplication::primaryScreen();
 	QRect r = wscr->availableGeometry();
 	this->setMinimumWidth  (qMin(400,r.width()));
 	this->setMinimumHeight (qMin(800,r.height()));
@@ -110,15 +111,15 @@ void DialogSelectMetar::make_metar_tree ()
 {
 	MetarWidgetFactory factory;
 	
-	QSet <QString> allExpanded = 
-		QSet <QString>::fromList
-			(Util::getSetting("metar_country_expanded", QStringList()).toStringList() );
-	QSet <QString> allSelected = 
-		QSet <QString>::fromList
-			(Util::getSetting("metar_selected", QStringList()).toStringList() );
+	// need to fix for qt6
+	QStringList metarCountryExpanded =  Util::getSetting("metar_country_expanded", QStringList()).toStringList();
+	QStringList metarSelected = Util::getSetting("metar_selected", QStringList()).toStringList();
+	QSet <QString> allExpanded = QSet <QString>(metarCountryExpanded.begin(), metarCountryExpanded.end());
+	QSet <QString> allSelected = QSet <QString>(metarSelected.begin(), metarSelected.end());
+	//QSet <QStringList> allSelected = QSet<QStringList>(Util::getSetting("metar_selected", QStringList()).toStringList() );
 			 		 
 	allAirports = factory.mapAirports.values ();
-	qSort (allAirports);	// sort by country/state/name
+	std::sort (allAirports.begin(),allAirports.end());	// sort by country/state/name
 	
 	treeWidget = new QTreeWidget ();
 	treeWidget->setColumnCount (2);
@@ -141,7 +142,7 @@ void DialogSelectMetar::make_metar_tree ()
 			assert (itemCountry);
 			itemRoot = itemCountry;
 			curState = "";
-			treeWidget->setFirstItemColumnSpanned (itemCountry, true);
+			itemCountry->setFirstColumnSpanned (true);
 			name = factory.mapCountries [curCountry];
 			if (name == "")
 				DBGQS ("Country name not found : "+curCountry);
@@ -156,7 +157,7 @@ void DialogSelectMetar::make_metar_tree ()
 				itemState = new QTreeWidgetItem (itemCountry);
 				assert (itemState);
 				itemRoot = itemState;
-				treeWidget->setFirstItemColumnSpanned (itemState, true);
+				itemState->setFirstColumnSpanned (true);
 				name = factory.mapStates [QPair<QString,QString>(curCountry,curState)];
 				if (name == "")
 					DBGQS ("State name not found : "+curState);

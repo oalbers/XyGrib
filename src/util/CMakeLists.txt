@@ -15,7 +15,7 @@ Util.cpp
 zuFile.cpp
 )
 
-qt5_wrap_cpp(util_mocs ${UTIL_SRCS} ${UTIL_HDRS})
+qt6_wrap_cpp(util_mocs ${UTIL_SRCS} ${UTIL_HDRS})
 
 add_library(util STATIC ${UTIL_SRCS} ${util_mocs})
 

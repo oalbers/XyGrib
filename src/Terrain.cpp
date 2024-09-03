@@ -911,10 +911,11 @@ void  Terrain::keyReleaseEvent (QKeyEvent *e)
 //---------------------------------------------------------
 void  Terrain::wheelEvent(QWheelEvent * e)
 {
-//printf("wheelEvent\n");
-    double k = 1 + .002 * e->delta();
+    QPoint numDegrees = e->angleDelta(); // qt6 / 8;
+
+    double k = 1 + .002 * numDegrees.y();
 	
-    if (e->delta() != 0)
+    if (numDegrees.y() != 0)
 		deltaZoomWheel *= k;
     else {
         e->ignore();
@@ -966,13 +967,13 @@ void Terrain::mousePressEvent (QMouseEvent * e) {
                 isDraggingMapEnCours = true;
             }
 		}
-        proj->screen2map(e->x(),e->y(), &selX1, &selY1);
+        proj->screen2map(e->position().x(),e->position().y(), &selX1, &selY1);
         selX0 = selX1;
         selY0 = selY1;
-		globalX0 = e->globalX();
-		globalY0 = e->globalY();
-        lastMouseX = e->x();
-        lastMouseY = e->y();
+		globalX0 = e->globalPosition().x();
+		globalY0 = e->globalPosition().y();
+        lastMouseX = e->position().x();
+        lastMouseY = e->position().y();
         update();
     }
 }
@@ -1000,7 +1001,7 @@ void Terrain::mouseReleaseEvent (QMouseEvent * e) {
     if (isSelectionZoneEnCours)
     {
         isSelectionZoneEnCours = false;
-        proj->screen2map(e->x(),e->y(), &selX1, &selY1);
+        proj->screen2map(e->position().x(),e->position().y(), &selX1, &selY1);
         if (getSelectedRectangle(&x0,&y0, &x1,&y1))
         {
             emit selectionOK(x0, y0, x1, y1);
@@ -1025,8 +1026,8 @@ void Terrain::mouseMoveEvent (QMouseEvent * e)
     {
 		// TODO use  tiles to drag map
 		double x0, y0, x1, y1;
-		int mx = lastMouseX-e->x();
-		int my = lastMouseY-e->y();
+		int mx = lastMouseX-e->position().x();
+		int my = lastMouseY-e->position().y();
 		proj->screen2map (mx, my,  &x0, &y0);
 		proj->screen2map (mx+width(), my+height(),  &x1, &y1);
 		proj->setVisibleArea (x0,y0, x1,y1);
@@ -1034,12 +1035,12 @@ void Terrain::mouseMoveEvent (QMouseEvent * e)
     }
     else if (isSelectionZoneEnCours)
     {
-		proj->screen2map (e->x(),e->y(), &selX1, &selY1);
+		proj->screen2map (e->position().x(),e->position().y(), &selX1, &selY1);
 		update();	// draw selection rectangle
     }
     
-	lastMouseX = e->x();
-	lastMouseY = e->y();
+	lastMouseX = e->position().x();
+	lastMouseY = e->position().y();
 	emit mouseMoved(e);
 }
 //---------------------------------------------------------

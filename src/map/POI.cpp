@@ -329,8 +329,8 @@ void POI::mouseMoveEvent (QMouseEvent * e) {
     if (moveInCourse)
     {
     	int i,j;	// position on screen
-    	i = x() + e->x() - xMouse + hpx;
-    	j = y() + e->y() - yMouse + hpy;
+    	i = x() + e->position().x() - xMouse + hpx;
+    	j = y() + e->position().y() - yMouse + hpy;
     	if (i>0 && j>0 && i+hpx<proj->getW() && j+hpy<proj->getH())
     	{
 			proj->screen2map(i, j, &lon, &lat);
@@ -345,8 +345,8 @@ void  POI::mousePressEvent(QMouseEvent *e)
 {
 	if (isMovable && e->modifiers()==Qt::ControlModifier) {
 		moveInCourse = true;		// Ctrl+Clic : move POI
-		xMouse = e->x();
-		yMouse = e->y();
+		xMouse = e->position().x();
+		yMouse = e->position().y();
 	} else if (e->modifiers()==Qt::ShiftModifier) { 
 	// add POI to global list, TH20100514
 		GLOB_listSelectedPOI.append( this );
@@ -360,7 +360,7 @@ void  POI::mousePressEvent(QMouseEvent *e)
 //-------------------------------------------------------------------------------
 void  POI::mouseReleaseEvent(QMouseEvent *e)
 {
-	if (e->x()<0 ||e->x()>width() ||e->y()<0 ||e->y()>height())
+	if (e->position().x()<0 ||e->position().x()>width() ||e->position().y()<0 ||e->position().y()>height())
 		return;
 		
 	if (! moveInCourse && e->modifiers()==Qt::NoModifier) {

@@ -279,8 +279,7 @@ void DialogLoadGRIB::slotGribLoadError (const QString& error)
 
 //----------------------------------------------------
 void DialogLoadGRIB::slotGribStartLoadData()
-{
-    timeLoad.start();
+{    timeLoad.start();
 }
 
 //----------------------------------------------------

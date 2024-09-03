@@ -239,7 +239,7 @@ Sounding::Sounding ()
 void Sounding::addSoundingPointC (double hpa, double tempC, double dewpC)
 {
 	allSounds << SoundingPoint (hpa, tempC, dewpC);
-	qSort (allSounds);
+	std::sort (allSounds.begin(), allSounds.end());
 	levelsAreValid = false;
 }
 //------------------------------------------------------

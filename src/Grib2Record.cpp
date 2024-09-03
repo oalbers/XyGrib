@@ -15,7 +15,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ***********************************************************************/
-
+//qt6 fix.. 112 and 432 different from qt5
 #include "Grib2Record.h"
 
 //----------------------------------------
@@ -109,7 +109,7 @@ Grib2Record::Grib2Record (gribfield  *gfld, int id, int idCenter, time_t refDate
 	this->idCenter = idCenter;
 	this->refDate = refDate;
 	this->idGrid = gfld->griddef;
-	sprintf(strRefDate, "%s", qPrintable(QDateTime::fromTime_t(refDate,Qt::UTC).toString("yyyy-MM-dd HH:mm")));
+	sprintf(strRefDate, "%s", QString::fromStdString(std::to_string(refDate)).toUtf8().constData());
 	ok = true;
 	waveData = false;  // TODO
 	verticalOrientationIsAmbiguous = false;
@@ -429,7 +429,7 @@ void Grib2Record::analyseProductDefinitionTemplate (gribfield  *gfld)
 			return;
 		}
 	}
-	sprintf(strCurDate, "%s", qPrintable(QDateTime::fromTime_t(curDate,Qt::UTC).toString("yyyy-MM-dd HH:mm")));
+	sprintf(strCurDate, "%s", qPrintable(QDateTime::fromSecsSinceEpoch(curDate, Qt::UTC).toString("yyyy-MM-dd HH:mm")));
 	//-------------------------
 	// Altitude
 	//-------------------------
