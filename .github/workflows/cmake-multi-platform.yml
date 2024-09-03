@@ -37,8 +37,8 @@ jobs:
     - name: Install packages
       run: |
         sudo apt update
-        sudo apt full-upgrade
-        sudo apt install libnova-dev libpng-dev libopenjp2-7-dev libproj-dev-zliblg-dev libbz2-dev
+        #sudo apt full-upgrade
+        sudo apt install libnova-dev libpng-dev libopenjp2-7-dev libproj-dev zliblg-dev libbz2-dev
         sudo apt install qt6-base-dev qt6-tools-dev linguist-qt6 qt6-tools-dev-tools
 
     - name: Set reusable strings
